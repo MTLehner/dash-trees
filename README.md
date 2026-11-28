@@ -9,7 +9,7 @@ its tests, and `GetDASHTree()` opens that one when you name no other tree.
 
 The RDKit downloads each file in git from a tag, so such a file never changes
 under its checksum. `dash_props` is too large for a file in git, so it is an
-asset of the release `v3`. Compare its md5 with the table below.
+asset of the release `v4`. Compare its md5 with the table below.
 
 ## Available trees
 
@@ -25,8 +25,8 @@ The trees with seven properties:
 
 | name | size | nodes | MBIS charge RMS error on held-out molecules ([Accuracy](#accuracy)) | tag | md5 |
 |---|---|---|---|---|---|
-| [`dash_props`](#dash_props) | 774.0 MB | 9,439,485 | 0.0250 e | `v3` (release asset) | `8acd507abba1265ac58b3bc19a340240` |
-| [`dash_props_pruned_0.02`](#dash_props_pruned_002) | 93.9 MB | 1,738,553 | 0.0254 e | `v3` | `5833ac4bc5f02278f4d4368aac0ac761` |
+| [`dash_props`](#dash_props) | 774.0 MB | 9,439,485 | 0.0250 e | `v4` (release asset) | `22444b59bbcd84e46b7a1172481d9024` |
+| [`dash_props_pruned_0.02`](#dash_props_pruned_002) | 93.9 MB | 1,738,553 | 0.0254 e | `v4` | `3fc18d68f56ae34aacb9443079dc5f2e` |
 
 ## The MBIS charge trees
 
@@ -104,14 +104,14 @@ licence (CC BY-NC-SA 4.0), so these trees do not have the C6 values.
 
 ### dash_props
 
-This is the full tree, with all 21 columns (sha256 `22325db42f68fcf3bb404e90628c33d4408e4138aca494156be74e30dbf95452`). Use it for
+This is the full tree, with all 21 columns (sha256 `f96aa474e6984d85989bf049f3147bdda8ce850d5c508d6dd72368180f718c17`). Use it for
 the most accurate values.
 
 ### dash_props_pruned_0.02
 
 This is `dash_props` pruned at `--tolerance 0.02` on `result`. It has the means
 and standard deviations, but no `_count` columns and no `size` column (sha256
-`4cf58013bcd8c1c9fe18b4c9dda707f393725ad504f3a592b36dd7acaeabedee`). It is small enough for a file in git. Its MBIS charges are 1.5 %
+`8c23769b7db87f720cb3646fb3d681e151d20c95f40ed437dd82d2dfe2292cba`). It is small enough for a file in git. Its MBIS charges are 1.5 %
 less accurate. Its AM1-BCC charges are 2.3 % less accurate.
 
 ### How the trees were made
@@ -125,7 +125,12 @@ python -m rdkit.Chem.DASHTree.prune dash_props.dash dash_props_pruned_0.02.dash 
 ```
 
 Both steps are deterministic. The docstring of `build_dash_props.py` lists the
-files of the data set that it reads.
+files of the data set that it reads. The trees of `v4` come from the populator
+of [rdkit/rdkit#9795](https://github.com/rdkit/rdkit/pull/9795) at commit
+`add5de390`, which computes the standard deviations without cancellation. The
+tag `v3` has an earlier build of `dash_props_pruned_0.02`. Two of its standard
+deviations (`mulliken_std` and `resp1_std`, one node each) differ by 2⁻²⁴, and
+all its other values are the same.
 
 ### Accuracy
 
